@@ -31,10 +31,20 @@ model User {
   email           String     @unique
   password        String
   emailVerifiedAt DateTime?
-  roles           Role[]     @default([USER])
+  userRoles UserRole[]
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   verificationCodes VerificationCode[]
+}
+
+model UserRole {
+  id     String @id @default(uuid())
+  userId String
+  role   Role
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
 }
 model VerificationCode {
   id        String               @id @default(uuid())
